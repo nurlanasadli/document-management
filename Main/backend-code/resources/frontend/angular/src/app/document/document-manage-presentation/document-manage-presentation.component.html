@@ -1,0 +1,269 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <div class="breadcrumb-main">
+        <div class="row">
+          <div class="col-6">
+            <div class="breadcrumb-title">
+              <h2>{{'ADD_DOCUMENT' | translate}}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form [formGroup]="documentForm">
+              <div class="row">
+                <div class="col-md-4">
+                  <label class="form-label">{{'DOCUMENT_UPLOAD' | translate}}</label>
+                  <input class="form-control" #file (change)="upload(file.files)" type="file">
+                  <div *ngIf="documentForm.get('url').touched && documentForm.get('url')?.errors">
+                    <div class="text-danger" *ngIf="documentForm.get('url').errors?.['required']">
+                      {{'DOCUMENT_IS_REQUIRED' | translate}}
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="documentForm.get('extension').touched && !documentForm.get('url')?.errors && documentForm.get('extension').errors">
+                    <div class="text-danger" *ngIf="documentForm.get('extension').errors?.['required']">
+                      {{'DOCUMENT_TYPE_IS_NOT_ALLOW' | translate}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">{{'NAME' | translate}}</label>
+                  <input formControlName="name" class="form-control" type="text">
+                  <div class="text-danger"
+                    *ngIf="documentForm.get('name').touched && documentForm.get('name')?.hasError('required')">
+                    {{'NAME_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">{{'META_TAGS' | translate}}</label>
+                  <input formControlName="farmerid" class="form-control" type="text">
+                  <div class="text-danger"
+                    *ngIf="documentForm.get('farmerid').touched && documentForm.get('farmerid')?.hasError('required')">
+                    {{'NAME_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">{{'CONTRACT_SQUARE' | translate}}</label>
+                  <input formControlName="square" class="form-control" type="text">
+                  <div class="text-danger"
+                    *ngIf="documentForm.get('square').touched && documentForm.get('square')?.hasError('required')">
+                    {{'NAME_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">{{'CONTRACT_VIOLATION' | translate}}</label>
+                  <select [(ngModel)]="violationActive"  formControlName="violation" class="form-control" type="text"  >
+                    <option value="1">Active</option>
+                    <option value="0">Deactive</option>
+                 </select>
+                  <div class="text-danger"
+                    *ngIf="documentForm.get('violation').touched && documentForm.get('violation')?.hasError('required')">
+                    {{'NAME_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">{{'CONTRACT_STATUS' | translate}}</label>
+                  <select [(ngModel)]="statusActive" formControlName="status" class="form-control" type="text"  >
+                    <option value="0">Created</option>
+                    <option value="1">Approved</option>
+                    <option value="2">Checked</option>
+                    <option value="3">Deleted</option>
+                 </select>
+                  <div class="text-danger"
+                    *ngIf="documentForm.get('status').touched && documentForm.get('status')?.hasError('required')">
+                    {{'NAME_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label">{{'CONTRACT_DISTRICT' | translate}}</label>
+                  <mat-select class="form-select" formControlName="district">
+                    <mat-option>-- {{'NONE' | translate}} --</mat-option>
+                    <mat-option *ngFor="let district of districts" [value]="district.name">
+                      <div class="country-item">
+                          <b> {{district.name}}</b>
+                      </div>
+                    </mat-option>
+                  </mat-select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">{{'CATEGORY' | translate}}</label>
+                  <mat-select class="form-select" formControlName="categoryId">
+                    <mat-option>-- {{'NONE' | translate}} --</mat-option>
+                    <mat-option *ngFor="let category of allCategories" [value]="category.id">
+                      <div class="country-item" [ngStyle]="{'margin-left.px': category.deafLevel* 20}">
+                        <div *ngIf="!category.parentId">
+                          <b> {{category.name}}</b>
+                        </div>
+                        <div *ngIf="category.parentId">
+                          {{category.name}}
+                        </div>
+                      </div>
+                    </mat-option>
+                  </mat-select>
+                  <div class="text-danger"
+                    *ngIf="documentForm.get('categoryId').touched && documentForm.get('categoryId').hasError('required')">
+                    {{'CATEGORY_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">{{'DESCRIPTION' | translate}}</label>
+                  <textarea formControlName="description" class="form-control">
+                  </textarea>
+                </div>
+                <div class="col-md-6" *hasClaim="'ALL_DOCUMENTS_SHARE_DOCUMENT'">
+                  <h6 class="vew-mail-header">{{'ASSIGN_SHARE_WITH_ROLES' | translate}}</h6>
+                  <mat-select class="form-select" placeholder="{{'ROLES' | translate}}" [(value)]="selectedRoles"
+                    multiple>
+                    <mat-select-trigger>
+                      <span *ngIf="selectedRoles.length > 0">
+                        {{selectedRoles[0].name}}
+                      </span>
+                      <span *ngIf="selectedRoles.length > 1" class="example-additional-selection">
+                        (+{{selectedRoles.length - 1}} {{selectedRoles.length === 2 ? 'other' : 'others'}})
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let role of roles" [value]="role">
+                      {{role.name}}
+                    </mat-option>
+                  </mat-select>
+                  <ng-container *ngIf="selectedRoles.length > 0" formGroupName="rolePermissionForm">
+                    <div class="row">
+                      <mat-checkbox (change)="roleTimeBoundChange($event)" color="primary"
+                        formControlName="isTimeBound">
+                        {{'SPACIFY_THE_PERIOD' | translate}}</mat-checkbox>
+                    </div>
+                    <div class="row" *ngIf="rolePermissionFormGroup.get('isTimeBound').value">
+                      <div class="col-md-6">
+                        <input [min]="minDate" class="form-control" placeholder="{{'CHOOSE_A_START_DATE' | translate}}"
+                          formControlName="startDate" [owlDateTimeTrigger]="date1" [owlDateTime]="date1">
+                        <owl-date-time #date1></owl-date-time>
+                        <mat-error
+                          *ngIf="rolePermissionFormGroup.get('startDate').touched && rolePermissionFormGroup.get('startDate').hasError('required')">
+                          {{'START_DATE_IS_REQURED' | translate}}
+                        </mat-error>
+                      </div>
+                      <div class="col-md-6">
+                        <input [min]="rolePermissionFormGroup.get('startDate').value" class="form-control"
+                          placeholder="{{'CHOOSE_A_END_DATE' | translate}}" formControlName="endDate"
+                          [owlDateTimeTrigger]="date2" [owlDateTime]="date2">
+                        <owl-date-time #date2></owl-date-time>
+                        <mat-error
+                          *ngIf="rolePermissionFormGroup.get('startDate').touched && rolePermissionFormGroup.get('endDate').hasError('required')">
+                          {{'END_DATE_IS_REQURED' | translate}}
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <mat-checkbox color="primary" formControlName="isAllowDownload">{{'ALLOW_DOWNLOAD' |
+                        translate}}</mat-checkbox>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="col-md-6" *hasClaim="'ALL_DOCUMENTS_SHARE_DOCUMENT'">
+                  <h6 class="vew-mail-header">{{'ASSIGN_SHARE_WITH_USERS' | translate}}</h6>
+                  <mat-select class="form-select" placeholder="{{'USERS' | translate}}" [(value)]="selectedUsers"
+                    multiple>
+                    <mat-select-trigger>
+                      <span *ngIf="selectedUsers.length > 0">
+                        {{selectedUsers[0].firstName}} {{selectedUsers[0].lastName}}
+                      </span>
+                      <span *ngIf="selectedUsers.length > 1" class="example-additional-selection">
+                        (+{{selectedUsers.length - 1}} {{selectedRoles.length === 2 ? 'other' : 'others'}})
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let user of users" [value]="user">
+                      {{user.firstName}} {{user.lastName}}
+                    </mat-option>
+                  </mat-select>
+                  <ng-container *ngIf="selectedUsers.length > 0" formGroupName="userPermissionForm">
+                    <div class="row">
+                      <mat-checkbox (change)="userTimeBoundChange($event)" color="primary"
+                        formControlName="isTimeBound">
+                        {{'SPACIFY_THE_PERIOD' | translate}}</mat-checkbox>
+                    </div>
+                    <div class="row" *ngIf="userPermissionFormGroup.get('isTimeBound').value">
+                      <div class="col-md-6">
+                        <input [min]="minDate" class="form-control" placeholder="{{'CHOOSE_A_START_DATE' | translate}}"
+                          formControlName="startDate" [owlDateTimeTrigger]="date1" [owlDateTime]="date1">
+                        <owl-date-time #date1></owl-date-time>
+                        <mat-error
+                          *ngIf="userPermissionFormGroup.get('startDate').touched && userPermissionFormGroup.get('startDate').hasError('required')">
+                          {{'START_DATE_IS_REQURED' | translate}}
+                        </mat-error>
+                      </div>
+                      <div class="col-md-6">
+                        <input [min]="userPermissionFormGroup.get('startDate').value" class="form-control"
+                          placeholder="{{'CHOOSE_A_END_DATE' | translate}}" formControlName="endDate"
+                          [owlDateTimeTrigger]="date2" [owlDateTime]="date2">
+                        <owl-date-time #date2></owl-date-time>
+                        <mat-error
+                          *ngIf="userPermissionFormGroup.get('startDate').touched && userPermissionFormGroup.get('endDate').hasError('required')">
+                          {{'END_DATE_IS_REQURED' | translate}}
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <mat-checkbox color="primary" formControlName="isAllowDownload">{{'ALLOW_DOWNLOAD' |
+                        translate}}</mat-checkbox>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="m-t-10 col-md-12">
+                  <button *hasClaim="'ALL_DOCUMENTS_CREATE_DOCUMENT'" class="btn-green btn btn-success btn-sm m-r-10"
+                    (click)="SaveDocument()" cdkFocusInitial> 
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g id="check-circle">
+                          <path id="Icon" d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999M22 3.99999L12 14.01L9.00001 11.01" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </g>
+                  </svg>                                                 
+                    {{'SAVE' | translate}}
+                  </button>
+                  <button type="button" class="btn btn-red btn-danger btn-sm" [routerLink]="['/documents']">
+                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g id="trash-2" stroke="red">
+                          <path id="Icon" d="M3.6875 6H5.6875M5.6875 6H21.6875M5.6875 6V20C5.6875 20.5304 5.89821 21.0391 6.27329 21.4142C6.64836 21.7893 7.15707 22 7.6875 22H17.6875C18.2179 22 18.7266 21.7893 19.1017 21.4142C19.4768 21.0391 19.6875 20.5304 19.6875 20V6H5.6875ZM8.6875 6V4C8.6875 3.46957 8.89821 2.96086 9.27329 2.58579C9.64836 2.21071 10.1571 2 10.6875 2H14.6875C15.2179 2 15.7266 2.21071 16.1017 2.58579C16.4768 2.96086 16.6875 3.46957 16.6875 4V6M10.6875 11V17M14.6875 11V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </g>
+                  </svg>                  
+                     {{'CANCEL' | translate}}</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<style>
+.btn-green{
+  background: #32977F !important;
+}
+.btn-green svg{
+  color: #ffff !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+.btn-green-color{
+  color: #ffff !important;
+}
+.btn-red{
+  border: 1px solid red !important;
+  background-color: white !important;
+  color: red !important;
+}
+
+.btn-red svg{
+  color: red !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+</style>

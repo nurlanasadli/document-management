@@ -1,0 +1,116 @@
+<nav #navbar class="navbar" [ngClass]="isNavbarShow ? 'active' : 'inactive'">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <h3 class="current-name">{{ currentPageName | titlecase }}</h3>
+      <h6>Document Management System</h6>
+    </div>
+    <div class="collapse navbar-collapse" [ngClass]="isNavbarCollapsed ? '' : 'show'">
+      <ul class="nav navbar-nav navbar-right center-stick">
+        <li class="nav-item">
+          <button mat-button class="button-margin">
+            <svg width="17" height="17" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5.24992 5.75016H5.25825M16.5749 11.0918L10.5999 17.0668C10.4451 17.2218 10.2613 17.3447 10.059 17.4286C9.85666 17.5125 9.63978 17.5556 9.42075 17.5556C9.20173 17.5556 8.98485 17.5125 8.78252 17.4286C8.58019 17.3447 8.39637 17.2218 8.24159 17.0668L1.08325 9.91683V1.5835H9.41659L16.5749 8.74183C16.8853 9.0541 17.0596 9.47652 17.0596 9.91683C17.0596 10.3571 16.8853 10.7796 16.5749 11.0918Z" stroke="#101828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>              
+          </button>
+        </li>
+        <li class="nav-item">
+          <button mat-button class="button-margin_class" >
+            <svg width="17" height="17" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10.0001 7.1665V13.8332M6.66675 10.4998H13.3334M18.3334 10.4998C18.3334 15.1022 14.6025 18.8332 10.0001 18.8332C5.39771 18.8332 1.66675 15.1022 1.66675 10.4998C1.66675 5.89746 5.39771 2.1665 10.0001 2.1665C14.6025 2.1665 18.3334 5.89746 18.3334 10.4998Z" stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>              
+          </button>
+        </li>
+        <li class="nav-item" ngbDropdown >
+          <button mat-button [matMenuTriggerFor]="notificationMenu" class="nav-notification-icons ">
+            <app-feather-icons [icon]="'bell'" [class]="'header-icon'"></app-feather-icons>
+            <span *ngIf="isUnReadNotification" class="label-count bg-orange"></span>
+          </button>
+          <mat-menu #notificationMenu="matMenu" class="nfc-menu">
+            <div class="nfc-header">
+              <h5 class="mb-0">{{'NOTIFICATIONS' | translate}}</h5>
+              <a (click)="markAllAsReadNotification()" class="nfc-mark-as-read cursor-pointer">
+                {{'MARK_ALL_AS_READ' | translate}}
+              </a>
+            </div>
+            <div class="nfc-dropdown">
+              <ng-scrollbar style="height: 350px" visibility="hover">
+                <div class="noti-list header-menu">
+                  <div class="menu">
+                    <div>
+                      <button mat-menu-item *ngFor="let notification of notifications"
+                        (click)="viewNotification(notification)">
+                        <span class="table-img msg-user" *ngIf="notification.documentId">
+                          <i class="material-icons-two-tone nfc-type-icon nfc-green">description</i>
+                        </span>
+                        <span class="table-img msg-user" *ngIf="!notification.documentId">
+                          <i class="material-icons-two-tone nfc-type-icon nfc-green">event_available</i>
+                        </span>
+                        <span class="menu-info">
+                          <ng-container *ngIf="!notification.message && notification.documentId">
+                            <span class="menu-title ">
+                              <b> <small> {{notification.documentName | limitTo: '25'}}</small></b>
+                              <small> {{'DOCUMENT_PERMISSION_GRANTED_TO_YOU' | translate}}
+                              </small>
+                            </span>
+                          </ng-container>
+                          <ng-container *ngIf="notification.message">
+                            <small class="menu-title">{{notification.message}}
+                              <ng-container *ngIf="notification.documentId">
+                                ::{{notification.documentName | limitTo: '25'}}
+                              </ng-container>
+                            </small>
+                          </ng-container>
+                          <span class="menu-desc mt-1">
+                            <i class="material-icons">access_time</i>
+                            {{notification.createdDate | utcToLocalTime:'shortDate' }}
+                          </span>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </ng-scrollbar>
+            </div>
+            <div class="nfc-footer">
+              <a [routerLink]="['/notifications']" class="nfc-read-all">
+                {{'VIEW_ALL' | translate}}
+              </a>
+            </div>
+          </mat-menu>
+        </li>
+        <li class="nav-item button-center">
+          <button mat-button class="button-size">
+            <svg color="#344054" width="17" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.4125 15.2125L4.9525 14.365L5.41 14.5875C6.46875 15.1012 7.67875 15.375 9 15.375C13.37 15.375 16.5 12.2525 16.5 8.5C16.5 4.73375 13.3925 1.625 9 1.625C4.6075 1.625 1.5 4.73375 1.5 8.5C1.50739 9.94128 1.98196 11.3413 2.8525 12.49L3.275 13.0525L2.4125 15.2113V15.2125ZM1.52875 16.825C1.41563 16.8629 1.29403 16.8676 1.17831 16.8386C1.06259 16.8097 0.957585 16.7481 0.875696 16.6614C0.793808 16.5746 0.738458 16.4663 0.716184 16.3491C0.693911 16.2319 0.705645 16.1107 0.75 16L1.85375 13.2413C0.820226 11.876 0.257477 10.2123 0.25 8.5C0.25 4.3575 3.6025 0.375 9 0.375C14.3975 0.375 17.75 4.3575 17.75 8.5C17.75 12.6425 14.3625 16.625 9 16.625C7.44375 16.625 6.05375 16.29 4.865 15.7125L1.5275 16.825H1.52875Z" fill="#344054"/>
+              </svg>
+              <span class="right">Support</span>            
+          </button>
+        </li>
+        <!-- <li class="nav-item user_profile">
+          <button mat-button [matMenuTriggerFor]="profilemenu">
+            <div class="chip dropdown-toggle" ngbDropdownToggle class="">
+              <img src="assets/images/user.jpg" class="rounded-circle" width="32" height="32" alt="User">
+            </div>
+          </button>
+          <mat-menu #profilemenu="matMenu" class="profile-menu">
+            <div class="noti-list">
+              <div class="menu ">
+                <div class="user_dw_menu">
+                  <button (click)="onProfileClick()" mat-menu-item>
+                    <app-feather-icons [icon]="'user'" [class]="'user-menu-icons'"></app-feather-icons>
+                    {{appUserAuth?.user?.firstName}} {{appUserAuth?.user?.lastName}}
+                  </button>
+                  <button mat-menu-item (click)="logout()">
+                    <app-feather-icons [icon]="'log-out'" [class]="'user-menu-icons'"></app-feather-icons>
+                    {{'LOGOUT' | translate}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-menu>
+        </li> -->
+      </ul>
+    </div>
+  </div>
+</nav>
+

@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto&display=swap');
+
+.logo-lg {
+    max-height: 45px !important;
+}
+
+.navbar-brand span{
+    line-height: 40px;
+}
+
+ul li button{
+}
+.center-stick{
+    margin-right: 16px !important;
+}
+.center-stick li{
+}
+.button-size {
+    border-radius: 9px ;
+    border: 1px solid #D0D5DD;
+    width: 125px;
+    height: 35px;
+    box-shadow: 0px 1px 2px 0px #1018280D;
+}
+.right{
+    margin-left: 8px;
+    margin-top: 1px;
+    color: #344054;
+}
+.button-margin{
+    margin-right: -23px;
+}
+.button-margin_class{
+    margin-right: -12px;
+}
+
+.navbar-header h3{
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+
+}
+.navbar-header h6{
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:"slnt" 0;
+    margin-left: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--Colors-Neutral-Icon-colorIcon, #00000073);
+}

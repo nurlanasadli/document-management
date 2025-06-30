@@ -1,0 +1,38 @@
+# Node.js
+node_modules/
+dist/
+.angular/
+.vscode/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.idea/
+*.js.map
+*.css.map
+*.tsbuildinfo
+coverage/
+
+# Laravel (PHP)
+/vendor/
+/node_modules/ # Backend's node_modules
+.env
+.env.backup
+.phpunit.result.cache
+/public/hot
+/storage/*.key
+/web.config
+/.idea
+/.vagrant
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+.env*.php
+.composer-auth.json
+/.docker
+.DS_Store # macOS specific
+
+# Docker
+.docker-data/ # If storing data from docker-compose
+*.log
+!storage/.gitignore # Laravel Save storage/.gitignore

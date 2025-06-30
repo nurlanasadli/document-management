@@ -1,0 +1,82 @@
+version: '3.8'
+services:
+
+  #PHP Service
+  backend:
+    build:
+      context: ./backend-code
+      dockerfile: Dockerfile
+    image: cloudsigma.com/php
+    container_name: backend
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: backend
+      SERVICE_TAGS: dev
+      UPLOAD_LIMIT: 64M
+    working_dir: /var/www/html/
+    volumes:
+      - ./backend-code:/var/www/html/
+      - ./php/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./php/laravel.ini:/usr/local/etc/php/conf.d/laravel.ini
+    networks:
+      - app-network
+    ports:
+      - "8003:8003"
+
+  #Nginx Service
+  # webserver:
+  #   depends_on:
+  #     - backend
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: Dockerfile
+  #   container_name: webserver
+  #   restart: unless-stopped
+  #   tty: true
+  #   ports:
+  #     - "8003:8003"
+  #   volumes:
+  #     - ./backend-code/public:/var/www/html/public/
+  #     - ./backend-code/storage/app/public/:/var/www/html/public/storage/
+  #   networks:
+  #     - app-network
+
+  #Postgres
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql/
+    environment:
+      MYSQL_DATABASE: 'laravel_web'
+      MYSQL_USER: 'laraveldocker'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    networks:
+      - app-network
+
+  # pma:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: pma
+  #   links:
+  #     - mysql
+  #   restart: always
+  #   ports:
+  #     - "8888:80"
+  #   environment:
+  #     PMA_HOST: mysql
+  #     PMA_PORT: 3306
+  #     PMA_ARBITRARY: 1
+  #   volumes:
+  #       - ./pma:/var/lib/mysql
+  #   networks:
+  #     - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
